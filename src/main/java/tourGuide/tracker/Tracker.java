@@ -52,7 +52,9 @@ public class Tracker extends Thread {
 			try {
 				logger.debug("Tracker sleeping");
 				TimeUnit.SECONDS.sleep(trackingPollingInterval);
+				logger.debug("tracker OK");
 			} catch (InterruptedException e) {
+				logger.debug("exception : " + e);
 				break;
 			}
 		}
