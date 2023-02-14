@@ -2,6 +2,12 @@ stages:
     - build
     - test
 
+cache:
+    key: "$CI_COMMIT_REF_NAME"
+    paths:
+        - build
+        - .gradle
+
 before_script:
     - export GRADLE_USER_HOME="$(pwd)/.gradle"
 
@@ -10,11 +16,6 @@ build:
     image: gradle:4.8.1-jdk8-slim
     script:
         - ./gradlew --build-cache assemble
-    cache:
-        key: "$CI_COMMIT_REF_NAME"
-        paths:
-            - build
-            - .gradle
     artifacts:
         paths:
             - build/libs/*.jar
@@ -25,11 +26,6 @@ test:
     image: gradle:4.8.1-jdk8-slim
     script:
         - ./gradlew check
-    cache:
-        key: "$CI_COMMIT_REF_NAME"
-        paths:
-            - build
-            - .gradle
     artifacts:
         paths:
             - build/reports/*
