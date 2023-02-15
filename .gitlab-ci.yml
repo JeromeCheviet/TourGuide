@@ -1,0 +1,36 @@
+stages:
+    - build
+    - test
+
+cache:
+    key: "$CI_COMMIT_REF_NAME"
+    paths:
+        - build
+        - .gradle
+
+before_script:
+    - export GRADLE_USER_HOME="$(pwd)/.gradle"
+
+build:
+    stage: build
+    image: gradle:4.8.1-jdk8-slim
+    script:
+        - ./gradlew --build-cache assemble
+    artifacts:
+        paths:
+            - build/libs/*.jar
+        expire_in: 7 days
+
+test:
+    stage: test
+    image: gradle:4.8.1-jdk8-slim
+    script:
+        - ./gradlew check
+        - awk -F"," '{ lines += $8 + $9; covered += $9 } END { print covered, "/", lines, "lines covered"; print 100*covered/lines, "% covered" }' build/reports/jacoco/test/jacocoTestReport.csv || echo "0.0 % covered"
+    coverage: '/\d+.*\d+ \% covered/'
+    artifacts:
+        paths:
+            - build/reports/*
+            - build/jacocoHtml/*
+        expire_in: 7 days
+
