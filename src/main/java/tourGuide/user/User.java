@@ -48,7 +48,7 @@ public class User {
 	public String getEmailAddress() {
 		return emailAddress;
 	}
-	
+
 	public void setLatestLocationTimestamp(Date latestLocationTimestamp) {
 		this.latestLocationTimestamp = latestLocationTimestamp;
 	}
@@ -56,7 +56,8 @@ public class User {
 	public Date getLatestLocationTimestamp() {
 		return latestLocationTimestamp;
 	}
-	
+
+	// TODO extract this method in another class
 	public void addToVisitedLocations(VisitedLocation visitedLocation) {
 		visitedLocations.add(visitedLocation);
 	}
@@ -64,11 +65,13 @@ public class User {
 	public List<VisitedLocation> getVisitedLocations() {
 		return visitedLocations;
 	}
-	
+
+	// TODO extract this method in another class
 	public void clearVisitedLocations() {
 		visitedLocations.clear();
 	}
-	
+
+	// TODO extract this method in another class
 	public void addUserReward(UserReward userReward) {
 		if(userRewards.stream().filter(r -> !r.attraction.attractionName.equals(userReward.attraction)).count() == 0) {
 			userRewards.add(userReward);
