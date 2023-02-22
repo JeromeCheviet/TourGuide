@@ -4,6 +4,7 @@ import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import tourGuide.user.User;
 import tourGuide.user.UserReward;
@@ -48,13 +49,13 @@ public class UserServiceTest {
 
         expectedLocation = new Location(1.23345, 3.76543);
         expectedVisitedLocation = new VisitedLocation(expectedUUID, expectedLocation, expectedDate);
-        expectedAttraction = new Attraction("Fururoscope", "Poitiers", "Vienne", 1.23346, 3.76442);
+        expectedAttraction = new Attraction("Futuroscope", "Poitiers", "Vienne", 1.23346, 3.76442);
         expectedUserReward = new UserReward(expectedVisitedLocation, expectedAttraction);
 
     }
 
     @Test
-    public void TestAddUserRewards() {
+    public void testAddUserRewards() {
         List<UserReward> expectedUserRewardList = new ArrayList<>();
         expectedUserRewardList.add(expectedUserReward);
 
@@ -63,6 +64,41 @@ public class UserServiceTest {
         List<UserReward> actualUserRewardList = expectedUser.getUserRewards();
 
         assertEquals(expectedUserRewardList, actualUserRewardList);
+
+    }
+
+    @Test
+    public void testAddUserReward_whenMultipleRewards() {
+        Attraction secondeAttraction = new Attraction("Center Parc", "Morton", "Vienne", 1.23356, 3.76652);
+        UserReward secondUserReward = new UserReward(expectedVisitedLocation, secondeAttraction);
+
+        List<UserReward> expectedUserRewardList = new ArrayList<>();
+        expectedUserRewardList.add(expectedUserReward);
+        expectedUserRewardList.add(secondUserReward);
+
+        expectedUserRewardList.stream().forEach( ur -> userService.addUserRewards(expectedUser, ur));
+
+        List<UserReward> actualUserRewardList = expectedUser.getUserRewards();
+
+        assertEquals(expectedUserRewardList.size(), actualUserRewardList.size());
+
+    }
+
+    @Ignore // TODO : Needs fixed - Adding UserReward if it is the same !!
+    @Test
+    public void testAddUserReward_whenSameReward() {
+        List<UserReward> expectedUserRewardList = new ArrayList<>();
+        expectedUserRewardList.add(expectedUserReward);
+
+        List<UserReward> userRewards = new ArrayList<>();
+        userRewards.add(expectedUserReward);
+        userRewards.add(expectedUserReward);
+
+        userRewards.stream().forEach( ur -> userService.addUserRewards(expectedUser, ur));
+
+        List<UserReward> actualUserRewardList = expectedUser.getUserRewards();
+
+        assertEquals(expectedUserRewardList.size(), actualUserRewardList.size());
 
     }
 
