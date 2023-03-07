@@ -1,10 +1,13 @@
 package tourGuide.service;
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
@@ -14,6 +17,8 @@ import tourGuide.user.UserReward;
 
 @Service
 public class RewardsService {
+
+	private Logger logger = LoggerFactory.getLogger(RewardsService.class);
     private static final double STATUTE_MILES_PER_NAUTICAL_MILE = 1.15077945;
 
 	// proximity in miles
@@ -22,6 +27,8 @@ public class RewardsService {
 	private int attractionProximityRange = 200;
 	private final GpsUtilService gpsUtilService;
 	private final RewardCentral rewardsCentral;
+
+	private UserService userService = new UserServiceImpl();
 	
 	public RewardsService(GpsUtilService gpsUtilService, RewardCentral rewardCentral) {
 		this.gpsUtilService = gpsUtilService;
@@ -37,20 +44,36 @@ public class RewardsService {
 	}
 	
 	public void calculateRewards(User user) {
-		List<VisitedLocation> userLocations = user.getVisitedLocations();
-		List<Attraction> attractions = gpsUtilService.getAttractions();
-		
+		//List<VisitedLocation> userLocations = user.getVisitedLocations();
+		//List<Attraction> attractions = gpsUtilService.getAttractions();
+		/*CopyOnWriteArrayList<VisitedLocation> userLocations = (CopyOnWriteArrayList<VisitedLocation>) user.getVisitedLocations();
+		CopyOnWriteArrayList<Attraction> attractions = (CopyOnWriteArrayList<Attraction>) gpsUtilService.getAttractions();*/
+		CopyOnWriteArrayList<VisitedLocation> userLocations = new CopyOnWriteArrayList<>(user.getVisitedLocations());
+		CopyOnWriteArrayList<Attraction> attractions = new CopyOnWriteArrayList<>(gpsUtilService.getAttractions());
+		int count = 0;
+
+		logger.debug(user.getUserName());
+
 		for(VisitedLocation visitedLocation : userLocations) {
 			for(Attraction attraction : attractions) {
-				if(user.getUserRewards().stream().filter(r -> r.attraction.attractionName.equals(attraction.attractionName)).count() == 0) {
-					if(nearAttraction(visitedLocation, attraction)) {
-						user.addUserReward(new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
-					}
-				}
+				addRewardToUser(visitedLocation, attraction, user);
+				count += 1;
+				//logger.debug(String.valueOf(count) + " " + attraction.attractionName);
+			}
+		}
+		//logger.debug(String.valueOf(userLocations.size()));
+	}
+
+	private void addRewardToUser(VisitedLocation visitedLocation, Attraction attraction, User user) {
+		if(user.getUserRewards().stream().filter(r -> r.attraction.attractionName.equals(attraction.attractionName)).count() == 0) {
+			if(nearAttraction(visitedLocation, attraction)) {
+				userService.addUserRewards(user,
+						new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
+				//user.addUserReward(new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
 			}
 		}
 	}
-	
+
 	public boolean isWithinAttractionProximity(Attraction attraction, Location location) {
 		return getDistance(attraction, location) > attractionProximityRange ? false : true;
 	}
