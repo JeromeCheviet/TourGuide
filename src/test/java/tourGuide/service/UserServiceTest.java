@@ -16,27 +16,13 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 
-//@ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
-
-    //@InjectMocks
     private UserService userService = new UserServiceImpl();
-
-    //@Mock
     private User expectedUser;
-
-    //@Mock
     private UserReward expectedUserReward;
-
-    //@Mock
     private VisitedLocation expectedVisitedLocation;
-
-    //@Mock
     private Attraction expectedAttraction;
-
-    //@Mock
     private Location expectedLocation;
-
     private Date expectedDate = new Date(2022, 12, 25, 8, 30, 25);
 
     @Before
@@ -51,7 +37,6 @@ public class UserServiceTest {
         expectedVisitedLocation = new VisitedLocation(expectedUUID, expectedLocation, expectedDate);
         expectedAttraction = new Attraction("Futuroscope", "Poitiers", "Vienne", 1.23346, 3.76442);
         expectedUserReward = new UserReward(expectedVisitedLocation, expectedAttraction);
-
     }
 
     @Test
@@ -84,7 +69,6 @@ public class UserServiceTest {
 
     }
 
-    @Ignore // TODO : Needs fixed - Adding UserReward if it is the same !!
     @Test
     public void testAddUserReward_whenSameReward() {
         List<UserReward> expectedUserRewardList = new ArrayList<>();
