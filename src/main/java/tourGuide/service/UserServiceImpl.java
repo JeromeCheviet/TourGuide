@@ -29,6 +29,7 @@ public class UserServiceImpl implements UserService {
         if (!visitedLocations.isEmpty()) {
             visitedLocations.clear();
         }
+        user.setVisitedLocations(visitedLocations);
     }
 
     @Override
