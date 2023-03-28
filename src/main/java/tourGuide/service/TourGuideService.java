@@ -14,6 +14,7 @@ import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import tourGuide.helper.InternalTestHelper;
+import tourGuide.model.NearAttraction;
 import tourGuide.tracker.Tracker;
 import tourGuide.user.User;
 import tourGuide.user.UserReward;
@@ -87,10 +88,10 @@ public class TourGuideService {
 		return visitedLocation;
 	}
 
-	public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
-		logger.debug("visitedLocation : " + visitedLocation.location.latitude);
-		List<Attraction> nearbyAttractions = new ArrayList<>();
+	public List<NearAttraction> getNearByAttractions(User user) {
+		List<NearAttraction> nearbyAttractions = new ArrayList<>();
 		Map<Double, Attraction> attractionMap = new HashMap<>();
+		VisitedLocation visitedLocation = trackUserLocation(user);
 
 		gpsUtilService.getAttractions().forEach((attraction) -> {
 			attractionMap.put(rewardsService.getDistance(attraction, visitedLocation.location), attraction);
@@ -98,10 +99,16 @@ public class TourGuideService {
 
 		TreeMap<Double, Attraction> sortedAttractionMap = new TreeMap<>(attractionMap);
 		sortedAttractionMap.values().stream().limit(5).forEach((attraction -> {
-			nearbyAttractions.add(attraction);
+
+			nearbyAttractions.add(new NearAttraction(attraction.attractionName,
+					attraction.latitude,
+					attraction.longitude,
+					visitedLocation.location.latitude,
+					visitedLocation.location.longitude,
+					rewardsService.getDistance(attraction, visitedLocation.location),
+					rewardsService.getRewardPoints(attraction, user)
+					));
 		}));
-
-
 
 /*		for(Attraction attraction : gpsUtilService.getAttractions()) {
 			logger.debug("attraction : " + attraction.attractionName);
