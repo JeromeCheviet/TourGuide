@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
@@ -35,6 +34,9 @@ public class TourGuideService {
 	private final RewardsService rewardsService;
 	private final TripPricer tripPricer = new TripPricer();
 	public final Tracker tracker;
+
+	private UserService userService = new UserServiceImpl();
+
 	boolean testMode = true;
 	
 	public TourGuideService(GpsUtilService gpsUtilService, RewardsService rewardsService) {
@@ -86,7 +88,7 @@ public class TourGuideService {
 	
 	public VisitedLocation trackUserLocation(User user) {
 		VisitedLocation visitedLocation = gpsUtilService.getUserLocation(user.getUserId());
-		user.addToVisitedLocations(visitedLocation);
+		userService.addToVisitedLocations(user, visitedLocation);
 		rewardsService.calculateRewards(user);
 		return visitedLocation;
 	}
@@ -133,7 +135,8 @@ public class TourGuideService {
 	
 	private void generateUserLocationHistory(User user) {
 		IntStream.range(0, 3).forEach(i-> {
-			user.addToVisitedLocations(new VisitedLocation(user.getUserId(), new Location(generateRandomLatitude(), generateRandomLongitude()), getRandomTime()));
+			logger.debug("userId : " + user.getUserId());
+			userService.addToVisitedLocations(user, new VisitedLocation(user.getUserId(), new Location(generateRandomLatitude(), generateRandomLongitude()), getRandomTime()));
 		});
 	}
 	

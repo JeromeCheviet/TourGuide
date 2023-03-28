@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.time.StopWatch;
@@ -17,11 +16,8 @@ import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
 import rewardCentral.RewardCentral;
 import tourGuide.helper.InternalTestHelper;
-import tourGuide.service.GpsUtilService;
-import tourGuide.service.RewardsService;
-import tourGuide.service.TourGuideService;
+import tourGuide.service.*;
 import tourGuide.user.User;
-import tourGuide.user.UserReward;
 
 public class TestPerformance {
 	
@@ -74,6 +70,7 @@ public class TestPerformance {
 	public void highVolumeGetRewards() {
 		GpsUtilService gpsUtilService = new GpsUtilService(new GpsUtil());
 		RewardsService rewardsService = new RewardsService(gpsUtilService, new RewardCentral());
+		UserService userService = new UserServiceImpl();
 
 		// Users should be incremented up to 100,000, and test finishes within 20 minutes
 		InternalTestHelper.setInternalUserNumber(100);
@@ -84,8 +81,7 @@ public class TestPerformance {
 	    Attraction attraction = gpsUtilService.getAttractions().get(0);
 		List<User> allUsers = new ArrayList<>();
 		allUsers = tourGuideService.getAllUsers();
-		allUsers.forEach(u -> u.addToVisitedLocations(new VisitedLocation(u.getUserId(), attraction, new Date())));
-	     
+		allUsers.forEach(u -> userService.addToVisitedLocations(u, new VisitedLocation(u.getUserId(), attraction, new Date())));
 	    allUsers.forEach(u -> rewardsService.calculateRewards(u));
 	    
 		for(User user : allUsers) {

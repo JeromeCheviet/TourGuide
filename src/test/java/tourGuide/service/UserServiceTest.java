@@ -4,7 +4,6 @@ import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import tourGuide.user.User;
 import tourGuide.user.UserReward;
@@ -86,5 +85,19 @@ public class UserServiceTest {
 
     }
 
+    @Test
+    public void testAddToVisitedLocation() {
+        userService.addToVisitedLocations(expectedUser, expectedVisitedLocation);
+        List<VisitedLocation> actualVisitedLocation = expectedUser.getVisitedLocations();
 
+        assertEquals(expectedVisitedLocation.location, actualVisitedLocation.get(0).location);
+    }
+
+    @Test
+    public void testClearVisitedLocation() {
+        userService.addToVisitedLocations(expectedUser, expectedVisitedLocation);
+        userService.clearVisitedLocations(expectedUser);
+
+        assertEquals(0, expectedUser.getVisitedLocations().size());
+    }
 }
