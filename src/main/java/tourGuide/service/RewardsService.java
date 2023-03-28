@@ -44,24 +44,14 @@ public class RewardsService {
 	}
 	
 	public void calculateRewards(User user) {
-		//List<VisitedLocation> userLocations = user.getVisitedLocations();
-		//List<Attraction> attractions = gpsUtilService.getAttractions();
-		/*CopyOnWriteArrayList<VisitedLocation> userLocations = (CopyOnWriteArrayList<VisitedLocation>) user.getVisitedLocations();
-		CopyOnWriteArrayList<Attraction> attractions = (CopyOnWriteArrayList<Attraction>) gpsUtilService.getAttractions();*/
 		CopyOnWriteArrayList<VisitedLocation> userLocations = new CopyOnWriteArrayList<>(user.getVisitedLocations());
 		CopyOnWriteArrayList<Attraction> attractions = new CopyOnWriteArrayList<>(gpsUtilService.getAttractions());
-		int count = 0;
-
-		logger.debug(user.getUserName());
 
 		for(VisitedLocation visitedLocation : userLocations) {
 			for(Attraction attraction : attractions) {
 				addRewardToUser(visitedLocation, attraction, user);
-				count += 1;
-				//logger.debug(String.valueOf(count) + " " + attraction.attractionName);
 			}
 		}
-		//logger.debug(String.valueOf(userLocations.size()));
 	}
 
 	private void addRewardToUser(VisitedLocation visitedLocation, Attraction attraction, User user) {
@@ -69,7 +59,6 @@ public class RewardsService {
 			if(nearAttraction(visitedLocation, attraction)) {
 				userService.addUserRewards(user,
 						new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
-				//user.addUserReward(new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
 			}
 		}
 	}

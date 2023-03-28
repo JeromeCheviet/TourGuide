@@ -15,11 +15,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void addUserRewards(User user, UserReward userReward) {
         List<UserReward> userRewards = user.getUserRewards();
-        logger.debug("liste : " + String.valueOf(userRewards.size()));
-        logger.debug("count : " + String.valueOf(userRewards.stream().filter(r -> r.attraction.attractionName.equals(userReward.attraction.attractionName)).count()));
         if (userRewards.stream().filter(r -> r.attraction.attractionName.equals(userReward.attraction.attractionName)).count() == 0) {
             userRewards.add(userReward);
-            logger.debug("added : " + userReward.attraction.attractionName);
         }
 
         user.setUserRewards(userRewards);
