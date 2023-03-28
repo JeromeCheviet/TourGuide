@@ -2,13 +2,7 @@ package tourGuide.service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -94,12 +88,30 @@ public class TourGuideService {
 	}
 
 	public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
+		logger.debug("visitedLocation : " + visitedLocation.location.latitude);
 		List<Attraction> nearbyAttractions = new ArrayList<>();
-		for(Attraction attraction : gpsUtilService.getAttractions()) {
+		Map<Double, Attraction> attractionMap = new HashMap<>();
+
+		gpsUtilService.getAttractions().forEach((attraction) -> {
+			attractionMap.put(rewardsService.getDistance(attraction, visitedLocation.location), attraction);
+		});
+
+		TreeMap<Double, Attraction> sortedAttractionMap = new TreeMap<>(attractionMap);
+		sortedAttractionMap.values().stream().limit(5).forEach((attraction -> {
+			nearbyAttractions.add(attraction);
+		}));
+
+
+
+/*		for(Attraction attraction : gpsUtilService.getAttractions()) {
+			logger.debug("attraction : " + attraction.attractionName);
+			logger.debug("attraction : " + attraction.latitude);
+			logger.debug("");
 			if(rewardsService.isWithinAttractionProximity(attraction, visitedLocation.location)) {
+				logger.debug("c'est proche");
 				nearbyAttractions.add(attraction);
 			}
-		}
+		}*/
 		
 		return nearbyAttractions;
 	}
