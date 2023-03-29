@@ -1,5 +1,6 @@
 package tourGuide.service;
 
+import gpsUtil.location.VisitedLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -15,13 +16,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public void addUserRewards(User user, UserReward userReward) {
         List<UserReward> userRewards = user.getUserRewards();
-        logger.debug("liste : " + String.valueOf(userRewards.size()));
-        logger.debug("count : " + String.valueOf(userRewards.stream().filter(r -> r.attraction.attractionName.equals(userReward.attraction.attractionName)).count()));
         if (userRewards.stream().filter(r -> r.attraction.attractionName.equals(userReward.attraction.attractionName)).count() == 0) {
             userRewards.add(userReward);
-            logger.debug("added : " + userReward.attraction.attractionName);
         }
 
         user.setUserRewards(userRewards);
+    }
+
+    @Override
+    public void clearVisitedLocations(User user) {
+        List<VisitedLocation> visitedLocations = user.getVisitedLocations();
+        if (!visitedLocations.isEmpty()) {
+            visitedLocations.clear();
+        }
+        user.setVisitedLocations(visitedLocations);
+    }
+
+    @Override
+    public void addToVisitedLocations(User user, VisitedLocation visitedLocation) {
+        List<VisitedLocation> visitedLocations = user.getVisitedLocations();
+        visitedLocations.add(visitedLocation);
+        user.setVisitedLocations(visitedLocations);
     }
 }

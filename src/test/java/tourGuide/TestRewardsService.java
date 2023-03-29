@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import gpsUtil.GpsUtil;
@@ -14,9 +13,7 @@ import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
 import rewardCentral.RewardCentral;
 import tourGuide.helper.InternalTestHelper;
-import tourGuide.service.GpsUtilService;
-import tourGuide.service.RewardsService;
-import tourGuide.service.TourGuideService;
+import tourGuide.service.*;
 import tourGuide.user.User;
 import tourGuide.user.UserReward;
 
@@ -26,13 +23,14 @@ public class TestRewardsService {
 	public void userGetRewards() {
 		GpsUtilService gpsUtilService = new GpsUtilService(new GpsUtil());
 		RewardsService rewardsService = new RewardsService(gpsUtilService, new RewardCentral());
+		UserService userService = new UserServiceImpl();
 
 		InternalTestHelper.setInternalUserNumber(0);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtilService, rewardsService);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		Attraction attraction = gpsUtilService.getAttractions().get(0);
-		user.addToVisitedLocations(new VisitedLocation(user.getUserId(), attraction, new Date()));
+		userService.addToVisitedLocations(user, new VisitedLocation(user.getUserId(), attraction, new Date()));
 		tourGuideService.trackUserLocation(user);
 		List<UserReward> userRewards = user.getUserRewards();
 		tourGuideService.tracker.stopTracking();

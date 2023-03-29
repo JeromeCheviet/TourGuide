@@ -58,18 +58,12 @@ public class User {
         this.latestLocationTimestamp = latestLocationTimestamp;
     }
 
-    // TODO extract this method in another class
-    public void addToVisitedLocations(VisitedLocation visitedLocation) {
-        visitedLocations.add(visitedLocation);
-    }
-
     public List<VisitedLocation> getVisitedLocations() {
         return visitedLocations;
     }
 
-    // TODO extract this method in another class
-    public void clearVisitedLocations() {
-        visitedLocations.clear();
+    public void setVisitedLocations(List<VisitedLocation> visitedLocations) {
+        this.visitedLocations = visitedLocations;
     }
 
     public List<UserReward> getUserRewards() {
