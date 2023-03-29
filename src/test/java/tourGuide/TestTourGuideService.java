@@ -3,10 +3,10 @@ package tourGuide;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import gpsUtil.GpsUtil;
@@ -14,11 +14,10 @@ import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
 import rewardCentral.RewardCentral;
 import tourGuide.helper.InternalTestHelper;
+import tourGuide.model.AllCurrentLocations;
 import tourGuide.model.NearAttraction;
-import tourGuide.service.GpsUtilService;
-import tourGuide.service.RewardsService;
-import tourGuide.service.TourGuideService;
-import tourGuide.user.User;
+import tourGuide.service.*;
+import tourGuide.model.user.User;
 import tripPricer.Provider;
 
 public class TestTourGuideService {
@@ -93,8 +92,7 @@ public class TestTourGuideService {
 		
 		assertEquals(user.getUserId(), visitedLocation.userId);
 	}
-	
-	//@Ignore // Not yet implemented
+
 	@Test
 	public void getNearbyAttractions() {
 		GpsUtilService gpsUtilService = new GpsUtilService(new GpsUtil());
@@ -127,4 +125,32 @@ public class TestTourGuideService {
 		assertEquals(5, providers.size());
 	}
 
+	@Test
+	public void getAllCurrentLocations() {
+		GpsUtilService gpsUtilService = new GpsUtilService(new GpsUtil());
+		RewardsService rewardsService = new RewardsService(gpsUtilService, new RewardCentral());
+		UserService userService = new UserServiceImpl();
+
+		InternalTestHelper.setInternalUserNumber(0);
+		TourGuideService tourGuideService = new TourGuideService(gpsUtilService, rewardsService);
+
+		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
+		User user2 = new User(UUID.randomUUID(), "jon2", "000", "jon2@tourGuide.com");
+
+		tourGuideService.addUser(user);
+		tourGuideService.addUser(user2);
+
+		Attraction attraction = gpsUtilService.getAttractions().get(0);
+		Attraction attraction2 = gpsUtilService.getAttractions().get(1);
+
+		userService.addToVisitedLocations(user, new VisitedLocation(user.getUserId(), attraction, new Date()));
+		userService.addToVisitedLocations(user, new VisitedLocation(user.getUserId(), attraction2, new Date()));
+		userService.addToVisitedLocations(user2, new VisitedLocation(user.getUserId(), attraction, new Date()));
+
+		List<AllCurrentLocations> actualAllCurrentLocations = tourGuideService.getAllCurrentLocations();
+
+		tourGuideService.tracker.stopTracking();
+
+		assertEquals(3, actualAllCurrentLocations.size());
+	}
 }
