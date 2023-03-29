@@ -5,8 +5,8 @@ import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import org.junit.Before;
 import org.junit.Test;
-import tourGuide.user.User;
-import tourGuide.user.UserReward;
+import tourGuide.model.user.User;
+import tourGuide.model.user.UserReward;
 
 import java.util.ArrayList;
 import java.util.Date;

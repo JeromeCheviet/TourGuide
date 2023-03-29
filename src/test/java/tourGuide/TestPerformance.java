@@ -17,7 +17,7 @@ import gpsUtil.location.VisitedLocation;
 import rewardCentral.RewardCentral;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.service.*;
-import tourGuide.user.User;
+import tourGuide.model.user.User;
 
 public class TestPerformance {
 	

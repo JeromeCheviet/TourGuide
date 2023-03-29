@@ -4,8 +4,8 @@ import gpsUtil.location.VisitedLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import tourGuide.user.User;
-import tourGuide.user.UserReward;
+import tourGuide.model.user.User;
+import tourGuide.model.user.UserReward;
 
 import java.util.List;
 

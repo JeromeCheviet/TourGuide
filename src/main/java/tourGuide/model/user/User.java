@@ -1,4 +1,4 @@
-package tourGuide.user;
+package tourGuide.model.user;
 
 import gpsUtil.location.VisitedLocation;
 import tripPricer.Provider;

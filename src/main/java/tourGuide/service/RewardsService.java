@@ -1,19 +1,17 @@
 package tourGuide.service;
 
-import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import rewardCentral.RewardCentral;
-import tourGuide.user.User;
-import tourGuide.user.UserReward;
+import tourGuide.model.user.User;
+import tourGuide.model.user.UserReward;
 
 @Service
 public class RewardsService {
