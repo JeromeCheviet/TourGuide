@@ -5,15 +5,14 @@ import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import tourGuide.model.user.User;
 import tourGuide.model.user.UserReward;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class UserServiceTest {
     private UserService userService = new UserServiceImpl();
@@ -99,5 +98,37 @@ public class UserServiceTest {
         userService.clearVisitedLocations(expectedUser);
 
         assertEquals(0, expectedUser.getVisitedLocations().size());
+    }
+
+    @Test
+    public void testGetLastVisitedLocation() {
+        VisitedLocation actualLastVisitedLocation = null;
+        Location secondeLocation = new Location(1.23356, 3.76652);
+        VisitedLocation secondeVisitedLocation = new VisitedLocation(UUID.randomUUID(), secondeLocation, expectedDate);
+        List<VisitedLocation> visitedLocations = new ArrayList<>();
+        visitedLocations.add(expectedVisitedLocation);
+        visitedLocations.add(secondeVisitedLocation);
+        expectedUser.setVisitedLocations(visitedLocations);
+
+        Optional<VisitedLocation> visitedLocation = userService.getLastVisitedLocation(expectedUser);
+
+        if (visitedLocation.isPresent()) {
+            actualLastVisitedLocation = visitedLocation.get();
+        }
+        assertEquals(secondeVisitedLocation.userId, actualLastVisitedLocation.userId);
+    }
+
+    @Test
+    public void testGetLastVisitedLocation_whenListEmpty_returnNull() {
+        VisitedLocation actualLastVisitedLocation = null;
+        userService.clearVisitedLocations(expectedUser);
+
+        Optional<VisitedLocation> visitedLocation = userService.getLastVisitedLocation(expectedUser);
+
+        if (visitedLocation.isPresent()) {
+            actualLastVisitedLocation = visitedLocation.get();
+        }
+
+        assertNull(actualLastVisitedLocation);
     }
 }
