@@ -17,7 +17,7 @@ import tourGuide.service.*;
 import tourGuide.model.user.User;
 import tourGuide.model.user.UserReward;
 
-public class TestRewardsServiceImpl {
+public class TestRewardsService {
 
 	@Test
 	public void userGetRewards() {
