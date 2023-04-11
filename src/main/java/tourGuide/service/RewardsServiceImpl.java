@@ -1,6 +1,8 @@
 package tourGuide.service;
 
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.List;
+import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +27,7 @@ public class RewardsServiceImpl implements RewardsService {
 	private int attractionProximityRange = 200;
 	private final GpsUtilServiceImpl gpsUtilServiceImpl;
 	private final RewardCentral rewardsCentral;
+	private final ExecutorService executorService = Executors.newFixedThreadPool(500);
 
 	private UserService userService = new UserServiceImpl();
 	
@@ -40,16 +43,25 @@ public class RewardsServiceImpl implements RewardsService {
 	public void setDefaultProximityBuffer() {
 		proximityBuffer = defaultProximityBuffer;
 	}
-	
+
+	public void calculateRewardsThread(List<User> users) {
+		List<CompletableFuture<Void>> completableFutures = users
+				.stream()
+				.map(user -> CompletableFuture.runAsync(() -> calculateRewards(user), executorService))
+				.collect(Collectors.toList());
+
+		completableFutures.forEach(CompletableFuture::join);
+		//executorService.shutdown();
+	}
+
 	public void calculateRewards(User user) {
 		CopyOnWriteArrayList<VisitedLocation> userLocations = new CopyOnWriteArrayList<>(user.getVisitedLocations());
 		CopyOnWriteArrayList<Attraction> attractions = new CopyOnWriteArrayList<>(gpsUtilServiceImpl.getAttractions());
 
 		for(VisitedLocation visitedLocation : userLocations) {
-			for(Attraction attraction : attractions) {
-				addRewardToUser(visitedLocation, attraction, user);
-			}
+			attractions.forEach(attraction -> addRewardToUser(visitedLocation, attraction, user));
 		}
+
 	}
 
 	private void addRewardToUser(VisitedLocation visitedLocation, Attraction attraction, User user) {

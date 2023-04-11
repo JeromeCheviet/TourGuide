@@ -2,6 +2,7 @@ package tourGuide;
 
 import static org.junit.Assert.*;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -54,7 +55,7 @@ public class TestRewardsService {
 		InternalTestHelper.setInternalUserNumber(1);
 		TourGuideServiceImpl tourGuideServiceImpl = new TourGuideServiceImpl(gpsUtilServiceImpl, rewardsServiceImpl);
 
-		rewardsServiceImpl.calculateRewards(tourGuideServiceImpl.getAllUsers().get(0));
+		rewardsServiceImpl.calculateRewardsThread(Collections.singletonList(tourGuideServiceImpl.getAllUsers().get(0)));
 		List<UserReward> userRewards = tourGuideServiceImpl.getUserRewards(tourGuideServiceImpl.getAllUsers().get(0));
 		tourGuideServiceImpl.tracker.stopTracking();
 
