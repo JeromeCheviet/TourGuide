@@ -63,7 +63,7 @@ public class TourGuideServiceImpl implements TourGuideService {
 	public VisitedLocation getUserLocation(User user) {
 		VisitedLocation visitedLocation = (user.getVisitedLocations().size() > 0) ?
 				user.getLastVisitedLocation() :
-				trackUserLocation(user);
+				trackUserLocationThread(Collections.singletonList(user)).get(0);
 		return visitedLocation;
 	}
 
@@ -113,7 +113,7 @@ public class TourGuideServiceImpl implements TourGuideService {
 	public List<NearAttraction> getNearByAttractions(User user) {
 		List<NearAttraction> nearbyAttractions = new ArrayList<>();
 		Map<Double, Attraction> attractionMap = new HashMap<>();
-		VisitedLocation visitedLocation = trackUserLocation(user);
+		VisitedLocation visitedLocation = trackUserLocationThread(Collections.singletonList(user)).get(0);
 
 		gpsUtilServiceImpl.getAttractions().forEach((attraction) -> {
 			attractionMap.put(rewardsServiceImpl.getDistance(attraction, visitedLocation.location), attraction);

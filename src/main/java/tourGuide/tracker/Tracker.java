@@ -1,5 +1,6 @@
 package tourGuide.tracker;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -45,7 +46,7 @@ public class Tracker extends Thread {
 			List<User> users = tourGuideServiceImpl.getAllUsers();
 			logger.debug("Begin Tracker. Tracking " + users.size() + " users.");
 			stopWatch.start();
-			users.forEach(u -> tourGuideServiceImpl.trackUserLocation(u));
+			users.forEach(u -> tourGuideServiceImpl.trackUserLocationThread(Collections.singletonList(u)).get(0));
 			stopWatch.stop();
 			logger.debug("Tracker Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds."); 
 			stopWatch.reset();

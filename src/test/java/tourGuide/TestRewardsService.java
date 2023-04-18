@@ -32,7 +32,7 @@ public class TestRewardsService {
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		Attraction attraction = gpsUtilServiceImpl.getAttractions().get(0);
 		userService.addToVisitedLocations(user, new VisitedLocation(user.getUserId(), attraction, new Date()));
-		tourGuideServiceImpl.trackUserLocation(user);
+		tourGuideServiceImpl.trackUserLocationThread(Collections.singletonList(user)).get(0);
 		List<UserReward> userRewards = user.getUserRewards();
 		tourGuideServiceImpl.tracker.stopTracking();
 		assertTrue(userRewards.size() == 1);
