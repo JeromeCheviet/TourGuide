@@ -1,5 +1,8 @@
 package tourGuide.model;
 
+/**
+ * Class to manage NearAttraction object.
+ */
 public class NearAttraction {
     private String attractionName;
     private Double attractionLatitude;
@@ -8,6 +11,7 @@ public class NearAttraction {
     private Double userLocationLongitude;
     private Double distance;
     private int rewardPoints;
+
 
     public NearAttraction(String attractionName, Double attractionLatitude, Double attractionLongitude, Double userLocationLatitude, Double userLocationLongitude, Double distance, int rewardPoints) {
         this.attractionName = attractionName;

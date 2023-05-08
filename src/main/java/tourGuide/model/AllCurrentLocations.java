@@ -2,6 +2,9 @@ package tourGuide.model;
 
 import gpsUtil.location.Location;
 
+/**
+ * Class to manage AllCurrentLocations Object.
+ */
 public class AllCurrentLocations {
     private String userId;
     private Location location;

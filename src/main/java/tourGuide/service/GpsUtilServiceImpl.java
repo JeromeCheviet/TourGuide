@@ -12,6 +12,9 @@ import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Class which rewrite the GpsUtil library due to an error from longitude and latitude format.
+ */
 @Service
 public class GpsUtilServiceImpl implements GpsUtilService {
     private GpsUtil gpsUtil;
@@ -20,6 +23,11 @@ public class GpsUtilServiceImpl implements GpsUtilService {
         this.gpsUtil = gpsUtil;
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * In this implementation, character ',' is replacing by '.' in Double longitude and latitude.
+     */
     public VisitedLocation getUserLocation(UUID userId) {
         this.sleep();
         double longitude = ThreadLocalRandom.current().nextDouble(-180.0, 180.0);
@@ -40,6 +48,9 @@ public class GpsUtilServiceImpl implements GpsUtilService {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public List<Attraction> getAttractions() {
         return gpsUtil.getAttractions();
     }

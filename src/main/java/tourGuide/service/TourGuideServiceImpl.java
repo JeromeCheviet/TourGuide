@@ -27,6 +27,9 @@ import tripPricer.TripPricer;
 
 import static java.util.stream.Collectors.toList;
 
+/**
+ * Class to link user, rewards and location.
+ */
 @Service
 public class TourGuideServiceImpl implements TourGuideService {
 	private Logger logger = LoggerFactory.getLogger(TourGuideServiceImpl.class);
@@ -34,6 +37,8 @@ public class TourGuideServiceImpl implements TourGuideService {
 	private final GpsUtilServiceImpl gpsUtilServiceImpl;
 	private final RewardsServiceImpl rewardsServiceImpl;
 	private final TripPricer tripPricer = new TripPricer();
+
+	private final int maxNearestAttraction = 5;
 	public final Tracker tracker;
 
 	private final ExecutorService executorService = Executors.newFixedThreadPool(100);
@@ -56,10 +61,18 @@ public class TourGuideServiceImpl implements TourGuideService {
 		addShutDownHook();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public List<UserReward> getUserRewards(User user) {
 		return user.getUserRewards();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * This method using trackUserLocationThread even if it is for only one user.
+	 */
 	public VisitedLocation getUserLocation(User user) {
 		VisitedLocation visitedLocation = (user.getVisitedLocations().size() > 0) ?
 				user.getLastVisitedLocation() :
@@ -67,20 +80,32 @@ public class TourGuideServiceImpl implements TourGuideService {
 		return visitedLocation;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public User getUser(String userName) {
 		return internalUserMap.get(userName);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public List<User> getAllUsers() {
 		return internalUserMap.values().stream().collect(toList());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void addUser(User user) {
 		if(!internalUserMap.containsKey(user.getUserName())) {
 			internalUserMap.put(user.getUserName(), user);
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public List<Provider> getTripDeals(User user) {
 		int cumulatativeRewardPoints = user.getUserRewards().stream().mapToInt(i -> i.getRewardPoints()).sum();
 		List<Provider> providers = tripPricer.getPrice(tripPricerApiKey, user.getUserId(), user.getUserPreferences().getNumberOfAdults(),
@@ -89,14 +114,11 @@ public class TourGuideServiceImpl implements TourGuideService {
 		return providers;
 	}
 
-	public VisitedLocation trackUserLocation(User user) {
-		VisitedLocation visitedLocation = gpsUtilServiceImpl.getUserLocation(user.getUserId());
-		userService.addToVisitedLocations(user, visitedLocation);
-		//rewardsServiceImpl.calculateRewards(user);
-		rewardsServiceImpl.calculateRewardsThread(Collections.singletonList(user));
-		return visitedLocation;
-	}
-
+	/**
+	 * {@inheritDoc}
+	 *
+	 * This method using CompletableFuture to execute trackUserLocation method in multiple thread.
+	 */
 	public List<VisitedLocation> trackUserLocationThread(List<User> users) {
 		List<CompletableFuture<VisitedLocation>> completableFutures = users
 				.parallelStream()
@@ -104,12 +126,30 @@ public class TourGuideServiceImpl implements TourGuideService {
 				.collect(toList());
 
 		List<VisitedLocation> visitedLocations = completableFutures.parallelStream().map(CompletableFuture::join).collect(toList());
-		//visitedLocations.stream().forEach(visitedLocation -> logger.debug(visitedLocation.userId.toString()));
-		//return completableFutures.parallelStream().map(CompletableFuture::join).collect(toList());
-		//executorService.shutdown();
 		return visitedLocations;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * This method using calculateRewardsThread even if it is for only one user.
+	 */
+	public VisitedLocation trackUserLocation(User user) {
+		VisitedLocation visitedLocation = gpsUtilServiceImpl.getUserLocation(user.getUserId());
+		userService.addToVisitedLocations(user, visitedLocation);
+		rewardsServiceImpl.calculateRewardsThread(Collections.singletonList(user));
+		return visitedLocation;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * This method construct a Map of all attraction and the distance between them and one user.
+	 * The map is sorted by distance and a specific number of first of the list are adding in a list of NearAttraction object.
+	 * The specific number is declared in maxNearestAttraction variable (actually 5).
+	 * <br>
+	 * trackUserLocationThread's method is using even if it is for only one user.
+	 */
 	public List<NearAttraction> getNearByAttractions(User user) {
 		List<NearAttraction> nearbyAttractions = new ArrayList<>();
 		Map<Double, Attraction> attractionMap = new HashMap<>();
@@ -120,7 +160,7 @@ public class TourGuideServiceImpl implements TourGuideService {
 		});
 
 		TreeMap<Double, Attraction> sortedAttractionMap = new TreeMap<>(attractionMap);
-		sortedAttractionMap.values().stream().limit(5).forEach((attraction -> {
+		sortedAttractionMap.values().stream().limit(maxNearestAttraction).forEach((attraction -> {
 
 			nearbyAttractions.add(new NearAttraction(attraction.attractionName,
 					attraction.latitude,
@@ -135,6 +175,9 @@ public class TourGuideServiceImpl implements TourGuideService {
 		return nearbyAttractions;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public List<AllCurrentLocations> getAllCurrentLocations() {
 		List<User> users = getAllUsers();
 		List<AllCurrentLocations> allCurrentLocations = new ArrayList<>();
