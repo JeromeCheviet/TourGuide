@@ -33,7 +33,6 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class TourGuideServiceImpl implements TourGuideService {
 	private Logger logger = LoggerFactory.getLogger(TourGuideServiceImpl.class);
-	//private final GpsUtil gpsUtil;
 	private final GpsUtilServiceImpl gpsUtilServiceImpl;
 	private final RewardsServiceImpl rewardsServiceImpl;
 	private final TripPricer tripPricer = new TripPricer();
@@ -75,7 +74,7 @@ public class TourGuideServiceImpl implements TourGuideService {
 	 */
 	public VisitedLocation getUserLocation(User user) {
 		VisitedLocation visitedLocation = (user.getVisitedLocations().size() > 0) ?
-				user.getLastVisitedLocation() :
+				userService.getLastVisitedLocation(user).get() :
 				trackUserLocationThread(Collections.singletonList(user)).get(0);
 		return visitedLocation;
 	}
