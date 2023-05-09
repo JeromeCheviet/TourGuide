@@ -8,6 +8,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Class to manage getters and setters of User Object.
+ */
 public class User {
     private final UUID userId;
     private final String userName;
@@ -80,10 +83,6 @@ public class User {
 
     public void setUserPreferences(UserPreferences userPreferences) {
         this.userPreferences = userPreferences;
-    }
-
-    public VisitedLocation getLastVisitedLocation() {
-        return visitedLocations.get(visitedLocations.size() - 1);
     }
 
     public List<Provider> getTripDeals() {

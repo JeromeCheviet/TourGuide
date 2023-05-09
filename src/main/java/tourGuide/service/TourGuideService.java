@@ -9,23 +9,73 @@ import tripPricer.Provider;
 
 import java.util.List;
 
+/**
+ * Interface link to TourGuide
+ */
 public interface TourGuideService {
+    /**
+     * Get all rewords of one user
+     * @param user Object
+     * @return List of UserReward object.
+     */
     List<UserReward> getUserRewards(User user);
 
+    /**
+     * Get user location
+     * @param user Object
+     * @return VisitedLocation object.
+     */
     VisitedLocation getUserLocation(User user);
 
+    /**
+     * Get information from a user
+     * @param userName String
+     * @return User object
+     */
     User getUser(String userName);
 
+    /**
+     * Get list of all users.
+     *
+     * @return List of user object
+     */
     List<User> getAllUsers();
 
+    /**
+     * Add a user
+     *
+     * @param user Object
+     */
     void addUser(User user);
 
+    /**
+     *  Get a list of provider use by one user.
+     * @param user Object
+     * @return List of provider object
+     */
     List<Provider> getTripDeals(User user);
 
+    /**
+     * Get the actual user location.
+     *
+     * @param user object
+     * @return VisitedLocation object
+     */
     VisitedLocation trackUserLocation(User user);
 
+    /**
+     * Get attractions near of one user
+     *
+     * @param user object
+     * @return List of NearAttraction object
+     */
     List<NearAttraction> getNearByAttractions(User user);
 
+    /**
+     * List of actual location for all users.
+     *
+     * @return List of AllCurrentLocations object.
+     */
     List<AllCurrentLocations> getAllCurrentLocations();
 
 }

@@ -14,6 +14,9 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private Logger logger = LoggerFactory.getLogger(RewardsServiceImpl.class);
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void addUserRewards(User user, UserReward userReward) {
         List<UserReward> userRewards = user.getUserRewards();
@@ -24,6 +27,9 @@ public class UserServiceImpl implements UserService {
         user.setUserRewards(userRewards);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void clearVisitedLocations(User user) {
         List<VisitedLocation> visitedLocations = user.getVisitedLocations();
@@ -33,6 +39,9 @@ public class UserServiceImpl implements UserService {
         user.setVisitedLocations(visitedLocations);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void addToVisitedLocations(User user, VisitedLocation visitedLocation) {
         List<VisitedLocation> visitedLocations = user.getVisitedLocations();
@@ -40,6 +49,9 @@ public class UserServiceImpl implements UserService {
         user.setVisitedLocations(visitedLocations);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<VisitedLocation> getLastVisitedLocation(User user) {
         List<VisitedLocation> visitedLocations = user.getVisitedLocations();
