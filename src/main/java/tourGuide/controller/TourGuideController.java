@@ -27,7 +27,7 @@ public class TourGuideController {
     
     @RequestMapping("/getLocation") 
     public String getLocation(@RequestParam String userName) {
-    	VisitedLocation visitedLocation = tourGuideServiceImpl.getUserLocation(getUser(userName));
+    	VisitedLocation visitedLocation = tourGuideServiceImpl.getUserLocation(tourGuideServiceImpl.getUser(userName));
 		return JsonStream.serialize(visitedLocation.location);
     }
     
@@ -43,13 +43,13 @@ public class TourGuideController {
     @RequestMapping("/getNearbyAttractions") 
     public String getNearbyAttractions(@RequestParam String userName) {
     	//VisitedLocation visitedLocation = tourGuideService.getUserLocation(getUser(userName));
-        User user = getUser(userName);
+        User user = tourGuideServiceImpl.getUser(userName);
     	return JsonStream.serialize(tourGuideServiceImpl.getNearByAttractions(user));
     }
     
     @RequestMapping("/getRewards") 
     public String getRewards(@RequestParam String userName) {
-    	return JsonStream.serialize(tourGuideServiceImpl.getUserRewards(getUser(userName)));
+    	return JsonStream.serialize(tourGuideServiceImpl.getUserRewards(tourGuideServiceImpl.getUser(userName)));
     }
     
     @RequestMapping("/getAllCurrentLocations")
@@ -69,13 +69,7 @@ public class TourGuideController {
     
     @RequestMapping("/getTripDeals")
     public String getTripDeals(@RequestParam String userName) {
-    	List<Provider> providers = tourGuideServiceImpl.getTripDeals(getUser(userName));
+    	List<Provider> providers = tourGuideServiceImpl.getTripDeals(tourGuideServiceImpl.getUser(userName));
     	return JsonStream.serialize(providers);
     }
-    
-    private User getUser(String userName) {
-    	return tourGuideServiceImpl.getUser(userName);
-    }
-   
-
 }
