@@ -1,6 +1,7 @@
 package tourGuide.service;
 
 import gpsUtil.location.VisitedLocation;
+import tourGuide.model.UpdateUserPreferences;
 import tourGuide.model.user.User;
 import tourGuide.model.user.UserReward;
 
@@ -37,4 +38,11 @@ public interface UserService {
      * @return VisitedLocation object if existing.
      */
     Optional<VisitedLocation> getLastVisitedLocation(User user);
+
+    /**
+     * Update the preferences for a specific user.
+     * @param user Object
+     * @param updateUserPreferences Object
+     */
+    void updatePreferences(User user, UpdateUserPreferences updateUserPreferences);
 }

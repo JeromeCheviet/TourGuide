@@ -3,9 +3,10 @@ package tourGuide.service;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
+import org.javamoney.moneta.Money;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
+import tourGuide.model.UpdateUserPreferences;
 import tourGuide.model.user.User;
 import tourGuide.model.user.UserReward;
 
@@ -35,6 +36,7 @@ public class UserServiceTest {
         expectedVisitedLocation = new VisitedLocation(expectedUUID, expectedLocation, expectedDate);
         expectedAttraction = new Attraction("Futuroscope", "Poitiers", "Vienne", 1.23346, 3.76442);
         expectedUserReward = new UserReward(expectedVisitedLocation, expectedAttraction);
+
     }
 
     @Test
@@ -130,5 +132,30 @@ public class UserServiceTest {
         }
 
         assertNull(actualLastVisitedLocation);
+    }
+
+    @Test
+    public void testUpdateUserPreferences() {
+        int actualAttractionProximity = 8;
+        String actualCurrency = "EUR";
+        int actualLowerPricePoint = 0;
+        int actualHighPricePoint = 10;
+        int actualTripDuration = 3;
+        int actualTicketQuantity = 4;
+        int actualNumberOfAdults = 2;
+        int actualNumberOfChildren = 2;
+
+        UpdateUserPreferences updateUserPreferences = new UpdateUserPreferences(actualAttractionProximity, actualCurrency,
+                actualLowerPricePoint, actualHighPricePoint, actualTripDuration, actualTicketQuantity, actualNumberOfAdults, actualNumberOfChildren);
+
+        userService.updatePreferences(expectedUser, updateUserPreferences);
+
+        assertEquals(expectedUser.getUserPreferences().getAttractionProximity(), actualAttractionProximity);
+        assertEquals(expectedUser.getUserPreferences().getLowerPricePoint(), Money.of(actualLowerPricePoint, actualCurrency));
+        assertEquals(expectedUser.getUserPreferences().getHighPricePoint(), Money.of(actualHighPricePoint, actualCurrency));
+        assertEquals(expectedUser.getUserPreferences().getTripDuration(), actualTripDuration);
+        assertEquals(expectedUser.getUserPreferences().getTicketQuantity(), actualTicketQuantity);
+        assertEquals(expectedUser.getUserPreferences().getNumberOfAdults(), actualNumberOfAdults);
+        assertEquals(expectedUser.getUserPreferences().getNumberOfChildren(), actualNumberOfChildren);
     }
 }

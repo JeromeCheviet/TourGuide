@@ -1,14 +1,19 @@
 package tourGuide.service;
 
 import gpsUtil.location.VisitedLocation;
+import org.javamoney.moneta.Money;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tourGuide.model.UpdateUserPreferences;
 import tourGuide.model.user.User;
+import tourGuide.model.user.UserPreferences;
 import tourGuide.model.user.UserReward;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -63,4 +68,19 @@ public class UserServiceImpl implements UserService {
 
         return Optional.ofNullable(visitedLocation);
     }
+
+    @Override
+    public void updatePreferences(User user, UpdateUserPreferences updateUserPreferences) {
+        UserPreferences userPreferences = new UserPreferences();
+        userPreferences.setAttractionProximity(updateUserPreferences.getAttractionProximity());
+        userPreferences.setLowerPricePoint(Money.of(updateUserPreferences.getLowerPricePoint(), updateUserPreferences.getCurrency()));
+        userPreferences.setHighPricePoint(Money.of(updateUserPreferences.getHighPricePoint(), updateUserPreferences.getCurrency()));
+        userPreferences.setTripDuration(updateUserPreferences.getTripDuration());
+        userPreferences.setTicketQuantity(updateUserPreferences.getTicketQuantity());
+        userPreferences.setNumberOfAdults(updateUserPreferences.getNumberOfAdults());
+        userPreferences.setNumberOfChildren(updateUserPreferences.getNumberOfChildren());
+
+        user.setUserPreferences(userPreferences);
+    }
+
 }
