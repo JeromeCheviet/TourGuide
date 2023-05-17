@@ -40,7 +40,7 @@ public class InternalUserService {
 
     private void generateUserLocationHistory(User user) {
         IntStream.range(0, 3).forEach(i -> {
-            logger.debug("userId : " + user.getUserId());
+            logger.debug("userId : " + user.getUserId() + " userName : " + user.getUserName());
             userService.addToVisitedLocations(user, new VisitedLocation(user.getUserId(), new Location(generateRandomLatitude(), generateRandomLongitude()), getRandomTime()));
         });
     }
