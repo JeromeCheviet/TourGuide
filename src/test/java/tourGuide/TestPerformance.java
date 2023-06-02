@@ -3,13 +3,11 @@ package tourGuide;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.time.StopWatch;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import gpsUtil.GpsUtil;
@@ -41,8 +39,7 @@ public class TestPerformance {
      *     highVolumeGetRewards: 100,000 users within 20 minutes:
 	 *          assertTrue(TimeUnit.MINUTES.toSeconds(20) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	 */
-	
-	//@Ignore
+
 	@Test
 	public void highVolumeTrackLocation() {
 		GpsUtilServiceImpl gpsUtilServiceImpl = new GpsUtilServiceImpl(new GpsUtil());
@@ -56,10 +53,6 @@ public class TestPerformance {
 		
 	    StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
-		/*for(User user : allUsers) {
-			tourGuideServiceImpl.trackUserLocation(user);
-			//tourGuideServiceImpl.trackUserLocationThread(Collections.singletonList(user));
-		}*/
 		tourGuideServiceImpl.trackUserLocationThread(allUsers);
 		stopWatch.stop();
 		tourGuideServiceImpl.tracker.stopTracking();
@@ -68,8 +61,7 @@ public class TestPerformance {
 		assertTrue(TimeUnit.MINUTES.toSeconds(15) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	}
 
-	
-	//@Ignore
+
 	@Test
 	public void highVolumeGetRewards() {
 		GpsUtilServiceImpl gpsUtilServiceImpl = new GpsUtilServiceImpl(new GpsUtil());
@@ -86,7 +78,6 @@ public class TestPerformance {
 		List<User> allUsers = new ArrayList<>();
 		allUsers = tourGuideServiceImpl.getAllUsers();
 		allUsers.forEach(u -> userService.addToVisitedLocations(u, new VisitedLocation(u.getUserId(), attraction, new Date())));
-	    //allUsers.forEach(u -> rewardsServiceImpl.calculateRewards(u));
 		rewardsServiceImpl.calculateRewardsThread(allUsers);
 	    
 		for(User user : allUsers) {
@@ -98,5 +89,5 @@ public class TestPerformance {
 		System.out.println("highVolumeGetRewards: Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds."); 
 		assertTrue(TimeUnit.MINUTES.toSeconds(20) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	}
-	
+
 }

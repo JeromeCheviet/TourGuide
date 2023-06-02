@@ -3,6 +3,7 @@ package tourGuide.service;
 import gpsUtil.location.VisitedLocation;
 import tourGuide.model.AllCurrentLocations;
 import tourGuide.model.NearAttraction;
+import tourGuide.model.UpdateUserPreferences;
 import tourGuide.model.user.User;
 import tourGuide.model.user.UserReward;
 import tripPricer.Provider;
@@ -35,6 +36,13 @@ public interface TourGuideService {
     User getUser(String userName);
 
     /**
+     * Search a specific user.
+     * @param userName the username to find.
+     * @return True if user exist, else false.
+     */
+    Boolean isUserExist(String userName);
+
+    /**
      * Get list of all users.
      *
      * @return List of user object
@@ -54,6 +62,14 @@ public interface TourGuideService {
      * @return List of provider object
      */
     List<Provider> getTripDeals(User user);
+
+    /**
+     *  Get the actual location for a list of User.
+     *
+     * @param users List of User Object
+     * @return List of VisitedLocation Object
+     */
+    List<VisitedLocation> trackUserLocationThread(List<User> users);
 
     /**
      * Get the actual user location.
@@ -78,4 +94,11 @@ public interface TourGuideService {
      */
     List<AllCurrentLocations> getAllCurrentLocations();
 
+    /**
+     * Find an existing user to linking the update user preference.
+     *
+     * @param userName username to find
+     * @param updateUserPreferences preferences to apply in an object.
+     */
+    void linkUpdatePreferenceToAnExistingUser(String userName, UpdateUserPreferences updateUserPreferences);
 }
