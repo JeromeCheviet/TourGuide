@@ -25,6 +25,9 @@ public class InternalUserService {
     private Logger logger = LoggerFactory.getLogger(InternalUserService.class);
     private UserService userService = new UserServiceImpl();
 
+    /**
+     * Method use for test to initialize random users.
+     */
     public void initializeInternalUsers() {
         IntStream.range(0, InternalTestHelper.getInternalUserNumber()).forEach(i -> {
             String userName = "internalUser" + i;

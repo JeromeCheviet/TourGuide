@@ -1,5 +1,8 @@
 package tourGuide.model;
 
+/**
+ * Class to manage UpdateUserPreferences object.
+ */
 public class UpdateUserPreferences {
     private int attractionProximity;
     private String currency;

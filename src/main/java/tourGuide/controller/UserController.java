@@ -9,12 +9,21 @@ import org.springframework.web.bind.annotation.RestController;
 import tourGuide.model.UpdateUserPreferences;
 import tourGuide.service.TourGuideService;
 
+/**
+ * Class which manage REST API Controller for User.
+ */
 @RestController
 public class UserController {
 
     @Autowired
     private TourGuideService tourGuideService;
 
+    /**
+     * Method to update preferences for a user
+     * @param userName - Name of user
+     * @param userPreferences - user's preferences. Must contain all preferences and not only modified.
+     * @return Object updateUserPreferences in Json format.
+     */
     @PutMapping("/users/updatePreferences")
     public String updateUserPreferences(@RequestParam String userName, @RequestBody UpdateUserPreferences userPreferences) {
         tourGuideService.linkUpdatePreferenceToAnExistingUser(userName, userPreferences);

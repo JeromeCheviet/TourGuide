@@ -69,6 +69,11 @@ public class UserServiceImpl implements UserService {
         return Optional.ofNullable(visitedLocation);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * The method get the current preferences and modifies them with the updated ones before applying them.
+     */
     @Override
     public void updatePreferences(User user, UpdateUserPreferences updateUserPreferences) {
         UserPreferences userPreferences = new UserPreferences();

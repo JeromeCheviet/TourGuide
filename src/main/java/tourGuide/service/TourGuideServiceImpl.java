@@ -88,6 +88,9 @@ public class TourGuideServiceImpl implements TourGuideService {
 		return internalUserService.internalUserMap.get(userName);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Boolean isUserExist(String userName) {
 		return internalUserService.internalUserMap.containsKey(userName) ? true : false;
@@ -204,6 +207,12 @@ public class TourGuideServiceImpl implements TourGuideService {
         return allCurrentLocations;
     }
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * if the user exists, it is sent to the class userService with the updated preferences to be applying.
+	 * Else, a personal exception is throwing.
+	 */
 	@Override
 	public void linkUpdatePreferenceToAnExistingUser(String userName, UpdateUserPreferences updateUserPreferences) {
 		if (isUserExist(userName)) {

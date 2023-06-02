@@ -35,6 +35,11 @@ public interface TourGuideService {
      */
     User getUser(String userName);
 
+    /**
+     * Search a specific user.
+     * @param userName the username to find.
+     * @return True if user exist, else false.
+     */
     Boolean isUserExist(String userName);
 
     /**
@@ -89,5 +94,11 @@ public interface TourGuideService {
      */
     List<AllCurrentLocations> getAllCurrentLocations();
 
+    /**
+     * Find an existing user to linking the update user preference.
+     *
+     * @param userName username to find
+     * @param updateUserPreferences preferences to apply in an object.
+     */
     void linkUpdatePreferenceToAnExistingUser(String userName, UpdateUserPreferences updateUserPreferences);
 }
