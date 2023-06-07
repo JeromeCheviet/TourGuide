@@ -30,7 +30,7 @@ public class RewardsServiceImpl implements RewardsService {
 	private int attractionProximityRange = 200;
 	private final GpsUtilServiceImpl gpsUtilServiceImpl;
 	private final RewardCentral rewardsCentral;
-	private final ExecutorService executorService = Executors.newFixedThreadPool(500);
+	private final ExecutorService executorService = Executors.newFixedThreadPool(515);
 
 	private UserService userService = new UserServiceImpl();
 
