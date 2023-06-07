@@ -17,7 +17,7 @@ apply plugin: "jacoco"
 
 bootJar {
     baseName = 'tourGuide'
-    version =  '1.0.0'
+    version =  '2.0.0'
 }
 
 repositories {
@@ -39,7 +39,8 @@ dependencies {
     compile(name:'gpsUtil', ext:'jar')
     compile(name:'RewardCentral', ext:'jar')
     compile(name:'TripPricer', ext:'jar')
-    
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+
     testCompile("junit:junit")
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.1.6.RELEASE'
 }
@@ -52,7 +53,7 @@ jacoco {
 jacocoTestReport {
     reports {
         xml.enabled true
-        csv.enabled false
+        csv.enabled true
         html.destination file("${buildDir}/jacocoHtml")
     }
 }
