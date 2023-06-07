@@ -39,7 +39,7 @@ public class TourGuideServiceImpl implements TourGuideService {
 	private final int maxNearestAttraction = 5;
 	public final Tracker tracker;
 
-	private final ExecutorService executorService = Executors.newFixedThreadPool(100);
+	private final ExecutorService executorService = Executors.newFixedThreadPool(85);
 
 	private UserService userService = new UserServiceImpl();
 
